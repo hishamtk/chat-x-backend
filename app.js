@@ -1,7 +1,11 @@
 const mongoose = require('mongoose');
 const express = require('express');
 const app = express();
+const bodyParser = require('body-parser')
 require('dotenv').config()
+global.appConfig = require('./config');
+
+const userApiRouter = require('./routes/user-api');
 
 //replacing default mongoose promie with ES6 Promise as it is depreciated.
 mongoose.Promise = global.Promise;
@@ -19,7 +23,13 @@ mongoose.connection.once('open', () => {
     console.log(error);
 });
 
-app.use(express.urlencoded({ extended: false }));
+app.use(bodyParser.json())
+
+app.use('/api/', userApiRouter);
+
+app.use((req, res, next) => {
+    return res.status(404).send({ msg: 'Requested resounce not found.' });
+});
 
 app.listen(process.env.APP_PORT);
 console.log('Server listening at port http://localhost:' + process.env.APP_PORT);
