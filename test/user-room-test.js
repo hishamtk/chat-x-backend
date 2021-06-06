@@ -30,7 +30,7 @@ describe.only('user room', function() {
         const user2 = await User.findOne({email: 'john@test.com'});
 
         const room = new Room({
-            type: 'single',
+            type: 'private',
             users: [user1.id, user2.id]
         });
 
