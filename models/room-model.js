@@ -9,6 +9,18 @@ const roomSchema = new Schema({
         type: String,
         required: true
     },
+    createdBy: {
+        type: Schema.Types.ObjectId, 
+        ref: 'user',
+        required: true
+    },
+    admins: [
+        {
+            type: Schema.Types.ObjectId, 
+            ref: 'user',
+            required: true
+        }
+    ],
     users: [
         {
             type: Schema.Types.ObjectId, 

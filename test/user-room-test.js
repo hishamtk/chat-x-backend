@@ -31,6 +31,8 @@ describe.only('user room', function() {
 
         const room = new Room({
             type: 'private',
+            createdBy: user1.id,
+            admins: [user1.id],
             users: [user1.id, user2.id]
         });
 
@@ -49,6 +51,8 @@ describe.only('user room', function() {
         const room = new Room({
             name: 'node devs',
             type: 'group',
+            createdBy: user1.id,
+            admins: [user1.id],
             users: [user1.id, user2.id, user3.id, user4.id]
         });
 
