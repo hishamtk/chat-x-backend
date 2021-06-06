@@ -40,14 +40,17 @@ exports.login = async (req, res, next) => {
     if (errors.isEmpty() == false) {
         return res.status(422).json({ errors: errors.mapped() });
     }
-    const user = await User.findOne({email: req.body.email});
-    let valid = await bcrypt.compare(req.body.password, user.password);
-    if (valid == false) {
-        res.status(422).json({errors: { password: 'Wrong password' } });
-    }
-
+    
+    const {email, password} = req.body;
+    
     try 
     {
+        let user = await User.findOne({email: email});
+        let valid = await bcrypt.compare(password, user.password);
+        if (valid == false) {
+            res.status(422).json({errors: { password: 'Wrong password' } });
+        }
+        
         const payload = { id: user._id};
         const options = { expiresIn: appConfig.jwt.expiry, issuer: appConfig.jwt.issuer };
         const token = jwt.sign(payload, appConfig.jwt.secret, options);
@@ -55,7 +58,7 @@ exports.login = async (req, res, next) => {
         res.status(200).send({
             msg: "Successfully logged in",
             accessToken: token,
-            user: user
+            user: {id: user.id, name: user.name, email: user.email}
         });
     }
     catch (err) {

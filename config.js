@@ -3,7 +3,7 @@ module.exports = {
         saltingRounds: 10
     },
     jwt: {
-        secret: "BPaLBl@J93GSKkyv$rl2KK^Z7NPTI*",
+        secret: process.env.JWT_SECRET,
         expiry: "1d",
         issuer: "chat-x"
     }
