@@ -14,7 +14,8 @@ mongoose.set('useUnifiedTopology', true);
 before((done) => {
 
 	//connect to database
-	mongoose.connect('mongodb://' + process.env.DB_HOST + ':' + process.env.DB_PORT + '/' + process.env.DB_NAME);
+	const uri = process.env.TEST_DB_HOST + ':' + process.env.TEST_DB_PORT + '/' + process.env.TEST_DB_NAME;
+	mongoose.connect('mongodb://' + uri);
 
 	mongoose.connection.once('open', function () {
 		console.log('connection has been made..');
