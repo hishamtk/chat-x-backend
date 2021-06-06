@@ -4,6 +4,7 @@ const app = express();
 const bodyParser = require('body-parser')
 require('dotenv').config()
 global.appConfig = require('./config');
+global.auth = null;
 
 const userApiRouter = require('./routes/user-api');
 
