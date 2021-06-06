@@ -9,6 +9,11 @@ module.exports = checkSchema({
         },
         custom: {
             options: (value) => {
+                if (value == authUser.id) {
+                    throw new Error('Invalid partner');
+                }
+            },
+            options: (value) => {
                 return User.findOne({ _id: value }).then(user => {
                     if (Object.is(user, null)) {
                         return Promise.reject('Partner does not exist');
@@ -16,7 +21,7 @@ module.exports = checkSchema({
                 })
             },
             options: (value) => {
-                return Room.findOne({ users: { $all: [auth.id, value] } }).then(room => {
+                return Room.findOne({ users: { $all: [authUser.id, value] } }).then(room => {
                     if (room) {
                         return Promise.reject('Room already exist');
                     }

@@ -15,7 +15,7 @@ const handler = async (req, res, next) => {
     try 
     {
         const result = jwt.verify(token, appConfig.jwt.secret, options);
-        auth = await User.findOne({_id: result.id});
+        authUser = await User.findOne({_id: result.id});
 
         next();
     } 
