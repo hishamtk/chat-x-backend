@@ -10,6 +10,6 @@ const privateRoomValidator = require('../validators/room-private-validator');
 router.post('/registers',  registrationValidator, AuthController.register);
 router.post('/sessions',  loginValidator, AuthController.login);
 
-router.get('/rooms/private', authMiddleware, privateRoomValidator, RoomController.createPrivate);
+router.post('/rooms/private', authMiddleware, privateRoomValidator, RoomController.createPrivate);
 
 module.exports = router;
