@@ -39,15 +39,15 @@ exports.createGroup = async (req, res, next) => {
     try 
     {
         const {partners, name, description} = req.body;
+        const members = [...new Set([authUser.id, ...partners])];
         const room = new Room({
             name: name,
             description: description == undefined ? '' : description,
             type: 'group',
             createdBy: authUser.id,
             admins: [authUser.id],
-            users: partners
+            users: members
         });
-        const members = [...new Set([authUser.id, ...partners])];
         await room.save();
         await User.updateMany({_id: { $in: members } }, {$addToSet : {rooms: [room.id]} });
 
@@ -92,9 +92,15 @@ exports.addMembers = async (req, res, next) => {
     
     try 
     {
+        const roomId = req.params.id;
+        const room = await Room.findOne({_id: roomId});
+        if (room.admins.indexOf(authUser.id) == -1 || room.users.indexOf(authUser.id) == -1) {
+            res.status(403).send({msg: 'Unauthorized'});
+        }
+
         const members = req.body.members;
-        await Room.updateOne({_id: req.params.id}, { $addToSet : { users: members } });
-        await User.updateMany({_id: { $in: members } }, { $addToSet : { rooms: [req.params.id] } });
+        await Room.updateOne({_id: roomId}, { $addToSet : { users: members } });
+        await User.updateMany({_id: { $in: members } }, { $addToSet : { rooms: [roomId] } });
         
         res.status(200).send({msg: 'Successfully added members'});
     }
@@ -113,9 +119,15 @@ exports.deleteMember = async (req, res, next) => {
     
     try 
     {
+        const roomId = req.params.id;
+        const room = await Room.findOne({_id: roomId});
+        if (room.admins.indexOf(authUser.id) == -1 || room.users.indexOf(authUser.id) == -1) {
+            res.status(403).send({msg: 'Unauthorized'});
+        }
+
         const member = req.body.member;
-        await Room.updateOne({_id: req.params.id }, { $pull: { users: member } });
-        await User.updateOne({_id: member }, { $pull: { rooms: req.params.id } });
+        await Room.updateOne({_id: roomId }, { $pull: { users: member } });
+        await User.updateOne({_id: member }, { $pull: { rooms: roomId } });
         
         res.status(200).send({msg: 'Successfully removed member'});
     }

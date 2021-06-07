@@ -7,7 +7,9 @@ module.exports = checkSchema({
         notEmpty: {
             errorMessage: 'Partner is required',
         },
+        bail: true,
         isArray: true,
+        bail: true,
         customSanitizer: {
             options: (value) => {
                 let sanitizedValue = value.filter(x => x != authUser.id);
