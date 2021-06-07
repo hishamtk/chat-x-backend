@@ -82,3 +82,24 @@ exports.update = async (req, res, next) => {
         res.status(500).send({msg: 'Oops, something is not right'})
     }
 };
+
+exports.addMembers = async (req, res, next) => {
+    
+    const errors = apiValidationErrorFormatter(req);
+    if (errors.isEmpty() == false) {
+        return res.status(422).json({ errors: errors.mapped() });
+    }
+    
+    try 
+    {
+        const members = req.body.members;
+        await Room.updateOne({_id: req.params.id}, { $addToSet : { users: members } });
+        await User.updateMany({_id: { $in: members } }, { $addToSet : { rooms: [req.params.id] } });
+        
+        res.status(200).send({msg: 'Successfully added members'});
+    }
+    catch (err) {
+        console.log(err);
+        res.status(500).send({msg: 'Oops, something is not right'})
+    }
+};
