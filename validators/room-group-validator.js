@@ -34,5 +34,12 @@ module.exports = checkSchema({
             errorMessage: 'Name is required',
         },
         isString: true,
+    },
+    name: {
+        isString: true,
+        isLength: {
+            errorMessage: 'Description can contain a maximum of 255 characters only',
+            options: { max: 255 },
+        },
     }
 });

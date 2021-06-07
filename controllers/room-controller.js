@@ -38,9 +38,10 @@ exports.createGroup = async (req, res, next) => {
     
     try 
     {
-        const {partners, name} = req.body;
+        const {partners, name, description} = req.body;
         const room = new Room({
             name: name,
+            description: description == undefined ? '' : description,
             type: 'group',
             createdBy: authUser.id,
             admins: [authUser.id],
