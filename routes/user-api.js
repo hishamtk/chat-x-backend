@@ -9,6 +9,7 @@ const privateRoomValidator = require('../validators/room-private-validator');
 const groupRoomValidator = require('../validators/room-group-validator');
 const roomValidator = require('../validators/room-validator');
 const roomAddMembersValidator = require('../validators/room-add-members-validator');
+const roomDeleteMemberValidator = require('../validators/room-delete-members-validator');
 
 router.post('/registers',  registrationValidator, AuthController.register);
 router.post('/sessions',  loginValidator, AuthController.login);
@@ -17,5 +18,6 @@ router.post('/rooms/private', authMiddleware, privateRoomValidator, RoomControll
 router.post('/rooms/group', authMiddleware, groupRoomValidator, RoomController.createGroup);
 router.put('/rooms/:id', authMiddleware, roomValidator, RoomController.update);
 router.put('/rooms/:id/add-members', authMiddleware, roomAddMembersValidator, RoomController.addMembers);
+router.delete('/rooms/:id/members', authMiddleware, roomDeleteMemberValidator, RoomController.deleteMember);
 
 module.exports = router;

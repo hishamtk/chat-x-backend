@@ -103,3 +103,24 @@ exports.addMembers = async (req, res, next) => {
         res.status(500).send({msg: 'Oops, something is not right'})
     }
 };
+
+exports.deleteMember = async (req, res, next) => {
+    
+    const errors = apiValidationErrorFormatter(req);
+    if (errors.isEmpty() == false) {
+        return res.status(422).json({ errors: errors.mapped() });
+    }
+    
+    try 
+    {
+        const member = req.body.member;
+        await Room.updateOne({_id: req.params.id }, { $pull: { users: member } });
+        await User.updateOne({_id: member }, { $pull: { rooms: req.params.id } });
+        
+        res.status(200).send({msg: 'Successfully removed member'});
+    }
+    catch (err) {
+        console.log(err);
+        res.status(500).send({msg: 'Oops, something is not right'})
+    }
+};
