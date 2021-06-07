@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const Message = require('./message-model');
 
 const roomSchema = new Schema({
     name: {
@@ -27,7 +28,8 @@ const roomSchema = new Schema({
             type: Schema.Types.ObjectId, 
             ref: 'user'
         }
-    ]
+    ],
+    latestMessage: { type: Message.schema }
 });
 
 module.exports = mongoose.model('Room', roomSchema);
