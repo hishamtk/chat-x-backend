@@ -136,3 +136,58 @@ exports.deleteMember = async (req, res, next) => {
         res.status(500).send({msg: 'Oops, something is not right'})
     }
 };
+
+exports.addAdmin = async (req, res, next) => {
+    
+    const errors = apiValidationErrorFormatter(req);
+    if (errors.isEmpty() == false) {
+        return res.status(422).json({ errors: errors.mapped() });
+    }
+    
+    try 
+    {
+        const roomId = req.params.id;
+        const room = await Room.findOne({_id: roomId});
+        if (room.admins.indexOf(authUser.id) == -1 || room.users.indexOf(authUser.id) == -1) {
+            res.status(403).send({msg: 'Unauthorized'});
+        }
+
+        const member = req.body.member;
+        await Room.updateOne({_id: roomId}, { $addToSet : { admins: member } });
+        
+        res.status(200).send({msg: 'Successfully added new admin'});
+    }
+    catch (err) {
+        console.log(err);
+        res.status(500).send({msg: 'Oops, something is not right'})
+    }
+};
+
+exports.deleteAdmin = async (req, res, next) => {
+    
+    const errors = apiValidationErrorFormatter(req);
+    if (errors.isEmpty() == false) {
+        return res.status(422).json({ errors: errors.mapped() });
+    }
+    
+    try 
+    {
+        const roomId = req.params.id;
+        const member = req.body.member;
+        const room = await Room.findOne({_id: roomId});
+        if (room.admins.indexOf(authUser.id) == -1 || room.users.indexOf(authUser.id) == -1) {
+            res.status(403).send({msg: 'Unauthorized'});
+        }
+        if (room.admins.length != 2) {
+            res.status(403).send({msg: 'Atleast one admin is required'});
+        }
+
+        await Room.updateOne({_id: roomId }, { $pull: { admins: member } });
+        
+        res.status(200).send({msg: 'Successfully removed admin'});
+    }
+    catch (err) {
+        console.log(err);
+        res.status(500).send({msg: 'Oops, something is not right'})
+    }
+};

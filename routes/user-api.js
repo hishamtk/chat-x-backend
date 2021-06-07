@@ -10,6 +10,8 @@ const groupRoomValidator = require('../validators/room-group-validator');
 const roomValidator = require('../validators/room-validator');
 const roomAddMembersValidator = require('../validators/room-add-members-validator');
 const roomDeleteMemberValidator = require('../validators/room-delete-members-validator');
+const roomAddAdminValidator = require('../validators/room-add-admin-validator');
+const roomDeleteAdminValidator = require('../validators/room-delete-admin-validator');
 
 router.post('/registers',  registrationValidator, AuthController.register);
 router.post('/sessions',  loginValidator, AuthController.login);
@@ -17,7 +19,9 @@ router.post('/sessions',  loginValidator, AuthController.login);
 router.post('/rooms/private', authMiddleware, privateRoomValidator, RoomController.createPrivate);
 router.post('/rooms/group', authMiddleware, groupRoomValidator, RoomController.createGroup);
 router.put('/rooms/:id', authMiddleware, roomValidator, RoomController.update);
-router.put('/rooms/:id/add-members', authMiddleware, roomAddMembersValidator, RoomController.addMembers);
+router.put('/rooms/:id/members', authMiddleware, roomAddMembersValidator, RoomController.addMembers);
 router.delete('/rooms/:id/members', authMiddleware, roomDeleteMemberValidator, RoomController.deleteMember);
+router.put('/rooms/:id/admins', authMiddleware, roomAddAdminValidator, RoomController.addAdmin);
+router.delete('/rooms/:id/admins', authMiddleware, roomDeleteAdminValidator, RoomController.deleteAdmin);
 
 module.exports = router;
