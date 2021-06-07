@@ -35,7 +35,7 @@ module.exports = checkSchema({
         },
         isString: true,
     },
-    name: {
+    description: {
         isString: true,
         isLength: {
             errorMessage: 'Description can contain a maximum of 255 characters only',
