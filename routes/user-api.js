@@ -1,7 +1,11 @@
 const express = require('express');
 const router = express.Router();
+//controllers
 const AuthController = require('../controllers/auth-controller');
 const RoomController = require('../controllers/room-controller');
+const UserController = require('../controllers/user-controller');
+
+//middlewares
 const registrationValidator = require('../validators/user-registration-validator')
 const loginValidator = require('../validators/user-login-validator');
 const authMiddleware = require('../middlewares/auth-middleware');
@@ -23,5 +27,7 @@ router.put('/rooms/:id/members', authMiddleware, roomAddMembersValidator, RoomCo
 router.delete('/rooms/:id/members', authMiddleware, roomDeleteMemberValidator, RoomController.deleteMember);
 router.put('/rooms/:id/admins', authMiddleware, roomAddAdminValidator, RoomController.addAdmin);
 router.delete('/rooms/:id/admins', authMiddleware, roomDeleteAdminValidator, RoomController.deleteAdmin);
+
+router.get('/user/rooms', authMiddleware, UserController.listRooms);
 
 module.exports = router;
