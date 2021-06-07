@@ -50,6 +50,7 @@ describe.only('user room', function() {
 
         const room = new Room({
             name: 'node devs',
+            description: 'for sharing tips and tricks of nodejs',
             type: 'group',
             createdBy: user1.id,
             admins: [user1.id],

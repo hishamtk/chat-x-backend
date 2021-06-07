@@ -5,6 +5,7 @@ const roomSchema = new Schema({
     name: {
         type: String
     },
+    description: String,
     type: {
         type: String,
         required: true
