@@ -17,21 +17,29 @@ exports.register = async (req, res, next) => {
         password: await bcrypt.hash(req.body.password, appConfig.bcrypt.saltingRounds),
         status: 'active'
     });
-
-    try {
+    
+    try 
+    {
         await user.save();
+        
+        const payload = { id: user._id};
+        const options = { expiresIn: appConfig.jwt.expiry, issuer: appConfig.jwt.issuer };
+        const token = jwt.sign(payload, appConfig.jwt.secret, options);
+
+        res.status(200).send({
+            msg: "Successfully registered",
+            accessToken: token,
+            user: {id: user.id, name: user.name, email: user.email}
+        });
+
     }
-    catch (err) {
+    catch (err) 
+    {
         console.log(err);
         res.status(500).send({
             msg: "Oops, something is not right"
         })
     }
-
-    res.status(200).send({
-        msg: "Successfully registered",
-    });
-
 };
 
 exports.login = async (req, res, next) => {
