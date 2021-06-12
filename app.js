@@ -2,7 +2,14 @@ const mongoose = require('mongoose');
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser')
+const http = require('http');
+const server = http.createServer(app);
+const { Server } = require("socket.io");
+const io = new Server(server);
+
+require('./socket/socket')(io);
 require('dotenv').config()
+
 global.appConfig = require('./config');
 global.authUser = null;
 
@@ -32,5 +39,6 @@ app.use((req, res, next) => {
     return res.status(404).send({ msg: 'Requested resounce not found.' });
 });
 
-app.listen(process.env.APP_PORT);
-console.log('Server listening at port http://localhost:' + process.env.APP_PORT);
+server.listen(process.env.APP_PORT, () => {
+    console.log('Server listening at port http://localhost:' + process.env.APP_PORT);
+});
