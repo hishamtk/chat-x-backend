@@ -18,6 +18,9 @@ const roomAddAdminValidator = require('../validators/room-add-admin-validator');
 const roomDeleteAdminValidator = require('../validators/room-delete-admin-validator');
 
 router.post('/registers',  registrationValidator, AuthController.register);
+
+router.get('/user',authMiddleware, AuthController.user )
+
 router.post('/sessions',  loginValidator, AuthController.login);
 
 router.post('/rooms/private', authMiddleware, privateRoomValidator, RoomController.createPrivate);
