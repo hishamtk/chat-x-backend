@@ -29,5 +29,6 @@ router.put('/rooms/:id/admins', authMiddleware, roomAddAdminValidator, RoomContr
 router.delete('/rooms/:id/admins', authMiddleware, roomDeleteAdminValidator, RoomController.deleteAdmin);
 
 router.get('/user/rooms', authMiddleware, UserController.listRooms);
+router.get('/users', authMiddleware, UserController.search);
 
 module.exports = router;

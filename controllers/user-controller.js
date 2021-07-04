@@ -29,3 +29,34 @@ exports.listRooms = async (req, res, next) => {
         })
     }
 };
+
+exports.search = async (req, res, next) => {
+
+    try 
+    {
+        const { term } = req.query;
+        const rgx = (pattern) => new RegExp(`.*${pattern}.*`);
+        const searchRgx = rgx(term);
+
+        const users = await User.aggregate()
+                                .match({
+                                    $or: [
+                                        { name: { $regex: searchRgx, $options: "i" } },
+                                        { email: { $regex: searchRgx, $options: "i" } },
+                                    ],
+                                })
+                                .project({name: 1, email: 1});
+
+        res.status(200).send({
+            msg: "Users",
+            data: users
+        });        
+    }
+    catch (err) 
+    {
+        console.log(err);
+        res.status(500).send({
+            msg: "Oops, something is not right"
+        })
+    }
+};
